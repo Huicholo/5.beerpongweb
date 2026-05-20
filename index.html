@@ -102,14 +102,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--fondo);color:var(--texto)
 
 /* PERFILES */
 .perfiles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem}
-.perfil-card{background:var(--fondo2);border:1px solid rgba(255,255,255,.07);border-radius:var(--radius-lg);overflow:hidden;transition:border-color .25s}
+.perfil-card{background:var(--fondo2);border:1px solid rgba(255,255,255,.07);border-radius:var(--radius-lg);overflow:visible;transition:border-color .25s;position:relative}
 .perfil-card:hover{border-color:rgba(232,185,35,.2)}
-.perfil-header{position:relative;height:200px;overflow:hidden;background:var(--fondo3)}
+.perfil-header{position:relative;height:200px;background:var(--fondo3);overflow:hidden;border-radius:var(--radius-lg) var(--radius-lg) 0 0}
 .perfil-cover{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.45);transition:filter .3s}
 .perfil-card:hover .perfil-cover{filter:brightness(.55)}
-.perfil-avatar-wrap{position:absolute;bottom:-44px;left:50%;transform:translateX(-50%)}
+.perfil-avatar-wrap{position:absolute;bottom:-44px;left:50%;transform:translateX(-50%);z-index:2}
 .perfil-avatar{width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid var(--dorado);display:block;background:var(--azul2)}
-.perfil-body{padding:3.2rem 1.5rem 1.5rem;text-align:center}
+.perfil-body{padding:3.5rem 1.5rem 1.5rem;text-align:center}
 .perfil-nombre{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:#fff;letter-spacing:.05em}
 .perfil-tag{font-size:.65rem;color:var(--dorado);text-transform:uppercase;letter-spacing:.18em;display:block;margin-top:.1rem}
 .perfil-badge{display:inline-block;margin-top:.75rem;background:rgba(232,185,35,.1);color:var(--dorado);border:1px solid rgba(232,185,35,.22);border-radius:999px;padding:.25rem 1rem;font-size:.75rem;font-weight:600;letter-spacing:.04em}
@@ -488,8 +488,8 @@ async function initStats() {
     const dataG = await resG.json();
     const dataP = await resP.json();
 
-    const victorias = dataP.total || 0; // perdedores = los que noqueamos = victorias
-    const derrotas  = dataG.total || 0; // ganadores  = los que nos ganaron = derrotas
+    const victorias = dataP.total || 0;
+    const derrotas  = dataG.total || 0;
     const total     = victorias + derrotas;
     const pct       = total ? Math.round(victorias / total * 100) : 0;
 
@@ -527,8 +527,7 @@ async function initStats() {
   }
 }
 
-// ── VASOS POR JUGADOR (edita PARTIDAS aqui) ──────────────────
-// bombon_vasos / munpeco_vasos = vasos anotados por cada quien en esa partida
+// ── VASOS POR JUGADOR ─────────────────────────────────────────
 const PARTIDAS = [
   {bombon_vasos:5, munpeco_vasos:4},
   {bombon_vasos:3, munpeco_vasos:2},
