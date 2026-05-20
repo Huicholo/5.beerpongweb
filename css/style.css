@@ -2,8 +2,6 @@
    BEERPONG WEB — estilos
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
-
 :root {
   --azul:    #052639;
   --azul2:   #0a3d5c;
@@ -168,6 +166,8 @@ body {
   transform: rotate(-90deg);
   width: 80px;
   height: 80px;
+  display: block;
+  flex-shrink: 0;
 }
 
 .ring-bg    { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 6; }
