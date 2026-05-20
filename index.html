@@ -167,8 +167,8 @@ footer em{color:var(--dorado);font-style:normal}
     <a class="nav-logo" href="#">BEER<span>PONG</span></a>
     <div class="nav-tabs">
       <button class="nav-tab active" data-tab="inicio">Inicio</button>
-      <button class="nav-tab" data-tab="noqueados">Noqueados</button>
-      <button class="nav-tab" data-tab="ganadores">Nos ganaron</button>
+      <button class="nav-tab" data-tab="noqueados">Perdedores</button>
+      <button class="nav-tab" data-tab="ganadores">Ganadores</button>
       <button class="nav-tab" data-tab="jugadores">Jugadores</button>
       <button class="nav-tab" data-tab="reglamento">Reglamento</button>
     </div>
@@ -206,8 +206,8 @@ footer em{color:var(--dorado);font-style:normal}
       </div>
 
       <div class="hero-ctas">
-        <button class="cta-btn cta-red"   onclick="goTab('ganadores')">Los que nos ganaron</button>
-        <button class="cta-btn cta-green" onclick="goTab('noqueados')">Los que noqueamos</button>
+        <button class="cta-btn cta-red"   onclick="goTab('ganadores')">Los que ganaron</button>
+        <button class="cta-btn cta-green" onclick="goTab('noqueados')">Los que perdieron</button>
         <button class="cta-btn cta-ghost" onclick="goTab('reglamento')">Reglamento</button>
       </div>
     </div>
@@ -218,7 +218,7 @@ footer em{color:var(--dorado);font-style:normal}
 <div id="panel-noqueados" class="tab-panel">
   <section class="section">
     <div class="section-inner">
-      <h2 class="section-title">Los que <em>noqueamos</em></h2>
+      <h2 class="section-title">Los que <em>perdieron</em></h2>
       <p class="section-sub">Los retaron a La Mesa. No sobrevivieron.</p>
       <div class="photo-grid" id="grid-noqueados">
         <div class="grid-loading"><div class="spinner"></div>Cargando...</div>
@@ -585,7 +585,7 @@ async function loadFotos(carpeta, gridId, esGanador) {
           <div class="photo-overlay">
             <div class="photo-name">${f.nombre}</div>
             <span class="photo-badge ${esGanador ? 'badge-loss' : 'badge-win'}">
-              ${esGanador ? 'Nos ganaron' : 'Los noqueamos'}
+              ${esGanador ? 'Nos ganaron' : 'Perdieron'}
             </span>
           </div>
         </div>
