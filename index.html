@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Estadísticas oficiales de Beer Pong — Bombón & Muñpeco" />
+  <title>🍺 Beer Pong Stats</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍺</text></svg>" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Confetti canvas (se activa automáticamente en racha ganadora ≥3) -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- ─── HERO ──────────────────────────────────────────── -->
+  <header class="hero">
+    <span class="hero-emoji">🍺</span>
+    <h1>BEER<span>PONG</span><br>STATS</h1>
+    <p class="hero-sub">Bombón &amp; Muñpeco — La Mesa Oficial</p>
+    <div id="racha-badge" class="racha-badge"></div>
+  </header>
+
+  <!-- ─── ESTADÍSTICAS ──────────────────────────────────── -->
+  <section class="stats-section">
+    <div class="stats-grid">
+
+      <!-- Win rate ring -->
+      <div class="stat-card ring-card">
+        <div class="ring-wrap">
+          <svg viewBox="0 0 80 80">
+            <circle class="ring-bg"       cx="40" cy="40" r="30" />
+            <circle class="ring-progress" cx="40" cy="40" r="30" />
+          </svg>
+          <div class="ring-text" id="stat-pct">0%</div>
+        </div>
+        <span class="stat-label">Win Rate</span>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-num" id="stat-total">0</span>
+        <span class="stat-label">Partidas</span>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-num" id="stat-ganadas">0</span>
+        <span class="stat-label">Victorias</span>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-num" id="stat-perdidas">0</span>
+        <span class="stat-label">Derrotas</span>
+      </div>
+
+    </div>
+
+    <!-- Tiros por jugador -->
+    <div class="player-stats">
+      <div class="player-stat-row">
+        <div class="ps-name">Bombón</div>
+        <div class="ps-num" id="stat-bombon-tiros">0</div>
+        <div class="ps-label">tazas metidas</div>
+      </div>
+      <div class="player-stat-row">
+        <div class="ps-name">Muñpeco</div>
+        <div class="ps-num" id="stat-munpeco-tiros">0</div>
+        <div class="ps-label">tazas metidas</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TABS NAV ──────────────────────────────────────── -->
+  <nav class="tabs-bar">
+    <div class="tabs-inner">
+      <button class="tab-btn active" data-tab="perdedores">😈 Los que noqueamos</button>
+      <button class="tab-btn"        data-tab="ganadores">☠️ Nos ganaron</button>
+      <button class="tab-btn"        data-tab="historial">📋 Historial</button>
+      <button class="tab-btn"        data-tab="perfiles">👤 Jugadores</button>
+      <button class="tab-btn"        data-tab="reglamento">📜 Reglamento</button>
+    </div>
+  </nav>
+
+  <!-- ─── PANEL: PERDEDORES (los que noqueamos) ────────── -->
+  <section id="panel-perdedores" class="tab-panel active">
+    <div class="panel-inner">
+      <h2 class="panel-title">Los que <span>noqueamos</span> 😈</h2>
+      <div class="photo-grid" id="grid-perdedores">
+        <!-- Renderizado por JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PANEL: GANADORES (los que nos ganaron) ───────── -->
+  <section id="panel-ganadores" class="tab-panel">
+    <div class="panel-inner">
+      <h2 class="panel-title">Los que <span>nos ganaron</span> ☠️</h2>
+      <div class="photo-grid" id="grid-ganadores">
+        <!-- Renderizado por JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PANEL: HISTORIAL ──────────────────────────────── -->
+  <section id="panel-historial" class="tab-panel">
+    <div class="panel-inner">
+      <h2 class="panel-title"><span>Historial</span> completo</h2>
+      <div class="historial-wrap">
+        <table class="historial-table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Rival</th>
+              <th>Resultado</th>
+              <th>🎯 Bombón</th>
+              <th>🔥 Muñpeco</th>
+              <th>Nota</th>
+            </tr>
+          </thead>
+          <tbody id="historial-tbody">
+            <!-- Renderizado por JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PANEL: PERFILES ───────────────────────────────── -->
+  <section id="panel-perfiles" class="tab-panel">
+    <div class="panel-inner">
+      <h2 class="panel-title">Los <span>jugadores</span></h2>
+      <div class="perfiles-grid">
+
+        <!-- Bombón -->
+        <div class="perfil-card" id="perfil-bombon">
+          <div class="perfil-header">
+            <img class="perfil-foto" src="" alt="Bombón">
+            <div class="perfil-nombre">Bombón</div>
+            <span class="perfil-alias"></span>
+            <div class="perfil-habilidad"></div>
+          </div>
+          <div class="perfil-body">
+            <p class="perfil-desc"></p>
+            <div class="perfil-stat-row">
+              <span class="perfil-stat-label">Tazas metidas</span>
+              <span class="perfil-stat-val perfil-tiros">—</span>
+            </div>
+            <div class="perfil-stat-row">
+              <span class="perfil-stat-label">% del equipo</span>
+              <span class="perfil-stat-val perfil-pct">—</span>
+            </div>
+            <div class="pct-bar-wrap">
+              <div class="perfil-pct-bar"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Muñpeco -->
+        <div class="perfil-card" id="perfil-munpeco">
+          <div class="perfil-header">
+            <img class="perfil-foto" src="" alt="Muñpeco">
+            <div class="perfil-nombre">Muñpeco</div>
+            <span class="perfil-alias"></span>
+            <div class="perfil-habilidad"></div>
+          </div>
+          <div class="perfil-body">
+            <p class="perfil-desc"></p>
+            <div class="perfil-stat-row">
+              <span class="perfil-stat-label">Tazas metidas</span>
+              <span class="perfil-stat-val perfil-tiros">—</span>
+            </div>
+            <div class="perfil-stat-row">
+              <span class="perfil-stat-label">% del equipo</span>
+              <span class="perfil-stat-val perfil-pct">—</span>
+            </div>
+            <div class="pct-bar-wrap">
+              <div class="perfil-pct-bar"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PANEL: REGLAMENTO ─────────────────────────────── -->
+  <section id="panel-reglamento" class="tab-panel">
+    <div class="panel-inner">
+      <h2 class="panel-title">El <span>reglamento</span> 📜</h2>
+      <div class="reglamento-grid">
+
+        <div class="regla-card">
+          <div class="regla-num">01</div>
+          <div class="regla-titulo">Formación estándar</div>
+          <div class="regla-desc">10 tazas en triángulo. Cada equipo en un extremo de la mesa. Sin excusas.</div>
+        </div>
+
+        <div class="regla-card">
+          <div class="regla-num">02</div>
+          <div class="regla-titulo">Tiro por turno</div>
+          <div class="regla-desc">Cada jugador lanza una vez por turno. Si ambos meten, el equipo gana 2 tazas y tienen bola de fuego.</div>
+        </div>
+
+        <div class="regla-card">
+          <div class="regla-num">03</div>
+          <div class="regla-titulo">Bola de fuego</div>
+          <div class="regla-desc">Si ambos jugadores del mismo equipo anotan en el mismo turno, se tira de nuevo. Ilimitado.</div>
+        </div>
+
+        <div class="regla-card">
+          <div class="regla-num">04</div>
+          <div class="regla-titulo">Bounce shot</div>
+          <div class="regla-desc">Si la bola bota en la mesa antes de entrar, cuenta como 2 tazas. El equipo rival puede bloquear.</div>
+        </div>
+
+        <div class="regla-card">
+          <div class="regla-num">05</div>
+          <div class="regla-titulo">Reordenamiento</div>
+          <div class="regla-desc">Cada equipo puede pedir un reordenamiento de sus tazas una sola vez por partida.</div>
+        </div>
+
+        <div class="regla-card">
+          <div class="regla-num">06</div>
+          <div class="regla-titulo">Isla</div>
+          <div class="regla-desc">Si hay una taza aislada, puedes gritar "isla" antes del tiro. Si metes, quitan 2. Si fallas, pierdes un tiro.</div>
+        </div>
+
+        <div class="regla-card">
+          <div class="regla-num">07</div>
+          <div class="regla-titulo">Reglamentación final</div>
+          <div class="regla-desc">Cuando el rival mete la última taza, el equipo perdedor tiene una ronda de redemption — un tiro cada uno sin interrupción.</div>
+        </div>
+
+        <div class="regla-card">
+          <div class="regla-num">08</div>
+          <div class="regla-titulo">La mesa manda</div>
+          <div class="regla-desc">Cualquier disputa sobre las reglas se resuelve por consenso de la mesa. Bombón y Muñpeco tienen voto doble.</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ────────────────────────────────────────── -->
+  <footer>
+    Hecho con <span>🍺</span> por Bombón &amp; Muñpeco · La Mesa Oficial
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

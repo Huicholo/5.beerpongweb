@@ -1,0 +1,3 @@
+Sube aquí las fotos de los rivales que NOQUEAMOS.
+Formato recomendado: nombre-del-rival.jpg (sin espacios, minúsculas)
+Ejemplo: los-primos.jpg

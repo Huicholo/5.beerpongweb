@@ -1,0 +1,3 @@
+Sube aquí las fotos de los rivales que NOS GANARON.
+Formato recomendado: nombre-del-rival.jpg (sin espacios, minúsculas)
+Ejemplo: el-guero.jpg
