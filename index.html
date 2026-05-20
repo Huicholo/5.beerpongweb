@@ -1,198 +1,399 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Estadísticas oficiales de Beer Pong — Bombón & Muñpeco" />
-  <title>🍺 Beer Pong Stats</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍺</text></svg>" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta name="description" content="Muñeco & Bombón's BeerPong Journal"/>
+  <title>🍺 Beer Pong Challengers</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍺</text></svg>"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
   <style>
-:root{--azul:#052639;--azul2:#0a3d5c;--acento:#3F7CAC;--dorado:#e8b923;--verde:#698D68;--fondo:#F7F8FA;--texto:#0d1b26;--muted:#6b7f8c;--rojo:#c0392b;--radius:12px;--shadow:0 4px 24px rgba(5,38,57,0.12)}
+:root{
+  --azul:#052639;--azul2:#0a3d5c;--azul3:#0f4f75;
+  --acento:#3F7CAC;--acento2:#5a9fc9;
+  --dorado:#e8b923;--dorado2:#f5d060;
+  --verde:#698D68;--rojo:#c0392b;
+  --fondo:#0d1b26;--fondo2:#0f2333;--fondo3:#142e42;
+  --texto:#f0f4f7;--muted:#7a9ab0;--muted2:#4a6a80;
+  --radius:10px;--radius-lg:16px;
+  --shadow:0 4px 32px rgba(0,0,0,0.4);
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:'DM Sans',sans-serif;background:var(--fondo);color:var(--texto);min-height:100vh;overflow-x:hidden}
+
+/* ── CONFETTI ── */
 #confetti-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;display:none}
-.hero{background:var(--azul);color:#fff;padding:3rem 1.5rem 2.5rem;text-align:center;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 30%,rgba(63,124,172,0.25) 0%,transparent 60%),radial-gradient(ellipse at 20% 80%,rgba(232,185,35,0.1) 0%,transparent 50%);pointer-events:none}
-.hero-emoji{font-size:3.5rem;display:block;margin-bottom:.5rem;animation:bob 2.4s ease-in-out infinite}
-@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,10vw,6rem);letter-spacing:.05em;line-height:1;color:#fff}
-.hero h1 span{color:var(--dorado)}
-.hero-sub{color:rgba(255,255,255,.55);margin-top:.4rem;letter-spacing:.08em;text-transform:uppercase;font-size:.75rem}
-.racha-badge{display:none;margin:1rem auto 0;padding:.4rem 1.2rem;border-radius:999px;font-weight:600;font-size:.9rem;letter-spacing:.03em}
-.racha-win{background:var(--dorado);color:var(--azul)}
-.racha-loss{background:var(--rojo);color:#fff}
-.stats-section{background:var(--azul);padding:0 1.5rem 2.5rem}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1rem;max-width:900px;margin:0 auto}
-.stat-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:1.2rem 1rem;text-align:center;transition:transform .2s,background .2s}
-.stat-card:hover{transform:translateY(-3px);background:rgba(255,255,255,.1)}
-.stat-card .stat-num{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--dorado);line-height:1;display:block}
-.stat-card .stat-label{font-size:.7rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.1em;margin-top:.3rem;display:block}
-.ring-card{display:flex;flex-direction:column;align-items:center;justify-content:center}
-.ring-wrap{position:relative;width:80px;height:80px;margin:0 auto .5rem}
-.ring-wrap svg{transform:rotate(-90deg);width:80px;height:80px;display:block;flex-shrink:0}
-.ring-bg{fill:none;stroke:rgba(255,255,255,.1);stroke-width:6}
-.ring-progress{fill:none;stroke:var(--dorado);stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1)}
-.ring-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--dorado)}
-.player-stats{max-width:900px;margin:1.5rem auto 0;display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.player-stat-row{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:1rem 1.2rem}
-.ps-name{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.45);margin-bottom:.25rem}
-.ps-num{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:#fff}
-.ps-label{font-size:.7rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.08em}
-.tabs-bar{background:#fff;border-bottom:1.5px solid rgba(5,38,57,.1);position:sticky;top:0;z-index:100;overflow-x:auto;scrollbar-width:none}
-.tabs-bar::-webkit-scrollbar{display:none}
-.tabs-inner{display:flex;max-width:900px;margin:0 auto;white-space:nowrap}
-.tab-btn{background:none;border:none;padding:1rem 1.25rem;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;transition:color .2s,border-color .2s;white-space:nowrap}
-.tab-btn:hover{color:var(--azul)}
-.tab-btn.active{color:var(--azul);border-bottom-color:var(--dorado)}
+
+/* ── NAVBAR ── */
+.navbar{
+  background:rgba(5,38,57,0.95);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(232,185,35,0.15);
+  position:sticky;top:0;z-index:200;
+  padding:0 1.5rem;
+}
+.nav-inner{max-width:1000px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--dorado);letter-spacing:.08em;text-decoration:none}
+.nav-logo span{color:#fff}
+.nav-tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{background:none;border:none;padding:.9rem 1rem;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;white-space:nowrap;letter-spacing:.03em}
+.nav-tab:hover{color:var(--texto)}
+.nav-tab.active{color:var(--dorado);border-bottom-color:var(--dorado)}
+
+/* ── PANELS ── */
 .tab-panel{display:none}
 .tab-panel.active{display:block}
-.panel-inner{max-width:960px;margin:0 auto;padding:2rem 1.25rem}
-.panel-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--azul);letter-spacing:.04em;margin-bottom:1.5rem}
-.panel-title span{color:var(--acento)}
-.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.25rem}
-.photo-card{border-radius:var(--radius);overflow:hidden;background:#fff;box-shadow:var(--shadow);transition:transform .25s,box-shadow .25s;animation:fadeUp .5s both}
-.photo-card:hover{transform:translateY(-5px);box-shadow:0 10px 40px rgba(5,38,57,.18)}
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.photo-wrap{position:relative;aspect-ratio:4/3;overflow:hidden}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(160deg, var(--azul) 0%, var(--fondo) 100%);
+  padding:5rem 1.5rem 4rem;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+  border-bottom:1px solid rgba(232,185,35,0.1);
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 80% 20%,rgba(63,124,172,0.2) 0%,transparent 55%),
+    radial-gradient(ellipse at 15% 85%,rgba(232,185,35,0.08) 0%,transparent 50%);
+  pointer-events:none;
+}
+.hero-kicker{
+  font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;
+  color:var(--dorado);margin-bottom:1rem;display:block;
+}
+.hero h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(3.5rem,12vw,7rem);
+  letter-spacing:.04em;line-height:.95;color:#fff;
+}
+.hero h1 em{color:var(--dorado);font-style:normal}
+.hero-sub{
+  margin-top:1rem;font-size:1rem;color:var(--muted);
+  letter-spacing:.04em;
+}
+.racha-badge{
+  display:none;margin:1.5rem auto 0;padding:.5rem 1.4rem;
+  border-radius:999px;font-weight:600;font-size:.88rem;letter-spacing:.04em;
+}
+.racha-win{background:var(--dorado);color:var(--azul)}
+.racha-loss{background:var(--rojo);color:#fff}
+
+/* ── SCORE HERO ── */
+.score-hero{
+  margin:3rem auto 0;max-width:480px;
+  display:flex;align-items:center;justify-content:center;gap:0;
+}
+.score-block{
+  flex:1;text-align:center;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:var(--radius-lg);
+  padding:2rem 1rem;
+}
+.score-block.win{border-color:rgba(105,141,104,0.4);background:rgba(105,141,104,0.08)}
+.score-block.loss{border-color:rgba(192,57,43,0.3);background:rgba(192,57,43,0.06)}
+.score-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(4rem,15vw,7rem);
+  line-height:1;display:block;
+}
+.score-block.win .score-num{color:var(--verde)}
+.score-block.loss .score-num{color:var(--rojo)}
+.score-lbl{font-size:.65rem;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin-top:.3rem;display:block}
+.score-sep{
+  font-family:'Bebas Neue',sans-serif;font-size:3rem;
+  color:var(--muted2);padding:0 1rem;flex-shrink:0;
+}
+
+/* ── WIN RATE BAR ── */
+.winrate-wrap{max-width:480px;margin:1.5rem auto 0;text-align:center}
+.winrate-bar-bg{height:6px;background:rgba(192,57,43,0.4);border-radius:999px;overflow:hidden}
+.winrate-bar-fill{height:100%;background:var(--verde);border-radius:999px;width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.winrate-pct{font-family:'DM Mono',monospace;font-size:.8rem;color:var(--muted);margin-top:.5rem}
+
+/* ── STATS ROW ── */
+.stats-row{
+  max-width:800px;margin:3rem auto 0;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;
+  padding:0 1.5rem;
+}
+.stat-pill{
+  background:var(--fondo2);border:1px solid rgba(255,255,255,0.06);
+  border-radius:var(--radius);padding:1.2rem 1rem;text-align:center;
+  transition:transform .2s,border-color .2s;
+}
+.stat-pill:hover{transform:translateY(-3px);border-color:rgba(232,185,35,0.25)}
+.stat-pill-num{
+  font-family:'Bebas Neue',sans-serif;font-size:2.6rem;
+  color:var(--dorado);line-height:1;display:block;
+}
+.stat-pill-lbl{font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-top:.3rem;display:block}
+
+/* ── SECTION WRAPPER ── */
+.section{padding:3rem 1.5rem}
+.section-inner{max-width:1000px;margin:0 auto}
+.section-title{
+  font-family:'Bebas Neue',sans-serif;font-size:2.2rem;
+  color:#fff;letter-spacing:.04em;margin-bottom:.4rem;
+}
+.section-title em{color:var(--dorado);font-style:normal}
+.section-sub{font-size:.85rem;color:var(--muted);margin-bottom:2rem;letter-spacing:.02em}
+
+/* ── PHOTO GRID ── */
+.photo-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:1rem;
+}
+.photo-card{
+  border-radius:var(--radius-lg);overflow:hidden;
+  background:var(--fondo2);border:1px solid rgba(255,255,255,0.06);
+  transition:transform .25s,box-shadow .25s,border-color .25s;
+  animation:fadeUp .5s both;cursor:pointer;
+}
+.photo-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 16px 48px rgba(0,0,0,0.5);
+  border-color:rgba(232,185,35,0.3);
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.photo-wrap{position:relative;aspect-ratio:3/4;overflow:hidden}
 .photo-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s;display:block}
-.photo-card:hover .photo-wrap img{transform:scale(1.06)}
-.photo-overlay{position:absolute;bottom:0;left:0;right:0;padding:.75rem;background:linear-gradient(transparent,rgba(5,38,57,.85))}
-.overlay-badge{font-size:.72rem;font-weight:600;padding:.3rem .7rem;border-radius:999px;letter-spacing:.04em}
+.photo-card:hover .photo-wrap img{transform:scale(1.07)}
+.photo-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(5,38,57,0.92) 0%,rgba(5,38,57,0.2) 50%,transparent 100%);
+  display:flex;flex-direction:column;justify-content:flex-end;padding:1rem;
+}
+.photo-name{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:#fff;letter-spacing:.04em;line-height:1.1}
+.photo-badge{
+  display:inline-block;margin-top:.4rem;
+  font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  padding:.25rem .7rem;border-radius:999px;
+}
 .badge-win{background:var(--verde);color:#fff}
 .badge-loss{background:var(--rojo);color:#fff}
-.photo-info{padding:.85rem 1rem}
-.photo-info h3{font-size:1rem;font-weight:600;color:var(--azul);margin-bottom:.2rem}
-.photo-date{font-size:.75rem;color:var(--muted);font-family:'DM Mono',monospace}
-.photo-nota{font-size:.8rem;color:var(--muted);margin-top:.4rem;font-style:italic}
-.empty-msg{grid-column:1/-1;text-align:center;padding:4rem 2rem;color:var(--muted);font-size:1.1rem}
-.perfiles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
-.perfil-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:transform .25s}
-.perfil-card:hover{transform:translateY(-4px)}
-.perfil-header{background:var(--azul);padding:2rem 1.5rem 1.5rem;text-align:center;position:relative}
-.perfil-foto{width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid var(--dorado);display:block;margin:0 auto 1rem;background:var(--azul2)}
+.loading-grid{
+  grid-column:1/-1;text-align:center;padding:4rem 2rem;
+  color:var(--muted);font-size:.95rem;
+}
+.loading-grid .spinner{
+  width:32px;height:32px;border:3px solid rgba(232,185,35,0.2);
+  border-top-color:var(--dorado);border-radius:50%;
+  animation:spin .8s linear infinite;margin:0 auto 1rem;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty-grid{grid-column:1/-1;text-align:center;padding:4rem 2rem;color:var(--muted)}
+.empty-grid .empty-icon{font-size:3rem;display:block;margin-bottom:.75rem}
+
+/* ── PERFILES ── */
+.perfiles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+.perfil-card{
+  background:var(--fondo2);border:1px solid rgba(255,255,255,0.07);
+  border-radius:var(--radius-lg);overflow:hidden;
+  transition:transform .25s,border-color .25s;
+}
+.perfil-card:hover{transform:translateY(-4px);border-color:rgba(232,185,35,0.25)}
+.perfil-header{
+  position:relative;height:180px;overflow:hidden;
+  background:var(--fondo3);
+}
+.perfil-bg{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.5)}
+.perfil-foto-wrap{
+  position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);
+}
+.perfil-foto{
+  width:90px;height:90px;border-radius:50%;object-fit:cover;
+  border:3px solid var(--dorado);display:block;background:var(--azul2);
+}
+.perfil-body{padding:3rem 1.5rem 1.5rem;text-align:center}
 .perfil-nombre{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:#fff;letter-spacing:.05em}
-.perfil-alias{font-size:.75rem;color:var(--dorado);text-transform:uppercase;letter-spacing:.12em;margin-top:.15rem;display:block}
-.perfil-habilidad{margin-top:.75rem;display:inline-block;background:rgba(232,185,35,.15);color:var(--dorado);border:1px solid rgba(232,185,35,.3);border-radius:999px;padding:.25rem .9rem;font-size:.78rem;font-weight:600}
-.perfil-body{padding:1.25rem 1.5rem}
-.perfil-desc{font-size:.9rem;color:var(--muted);line-height:1.6;margin-bottom:1.25rem}
-.perfil-stat-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem}
-.perfil-stat-label{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
-.perfil-stat-val{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--azul)}
-.pct-bar-wrap{height:6px;background:rgba(5,38,57,.08);border-radius:999px;overflow:hidden;margin-top:.5rem}
-.perfil-pct-bar{height:100%;border-radius:999px;width:0;transition:width 1s cubic-bezier(.4,0,.2,1);background:var(--acento)}
-.historial-wrap{overflow-x:auto;border-radius:var(--radius);box-shadow:var(--shadow)}
-.historial-table{width:100%;border-collapse:collapse;background:#fff;font-size:.88rem}
-.historial-table thead tr{background:var(--azul);color:rgba(255,255,255,.7);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em}
-.historial-table th,.historial-table td{padding:.85rem 1rem;text-align:left;white-space:nowrap}
-.historial-table tbody tr{border-bottom:1px solid rgba(5,38,57,.06);transition:background .15s}
-.historial-table tbody tr:hover{background:rgba(5,38,57,.03)}
+.perfil-alias{font-size:.7rem;color:var(--dorado);text-transform:uppercase;letter-spacing:.15em;display:block;margin-top:.1rem}
+.perfil-habilidad{
+  display:inline-block;margin-top:.75rem;
+  background:rgba(232,185,35,0.12);color:var(--dorado);
+  border:1px solid rgba(232,185,35,0.25);border-radius:999px;
+  padding:.25rem 1rem;font-size:.78rem;font-weight:600;
+}
+.perfil-desc{font-size:.88rem;color:var(--muted);line-height:1.65;margin:1rem 0 1.25rem}
+.perfil-stats{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.ps-item{background:var(--fondo3);border-radius:var(--radius);padding:.85rem .75rem;text-align:center}
+.ps-num{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--dorado);display:block;line-height:1}
+.ps-lbl{font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-top:.2rem;display:block}
+.pct-bar-wrap{height:4px;background:rgba(255,255,255,0.08);border-radius:999px;overflow:hidden;margin-top:.75rem}
+.perfil-pct-bar{height:100%;border-radius:999px;width:0;transition:width 1s cubic-bezier(.4,0,.2,1)}
+
+/* ── HISTORIAL ── */
+.historial-wrap{overflow-x:auto;border-radius:var(--radius-lg);border:1px solid rgba(255,255,255,0.07)}
+.historial-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.historial-table thead tr{background:var(--fondo3)}
+.historial-table th{
+  padding:.85rem 1rem;text-align:left;
+  font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;
+  color:var(--muted);font-weight:500;white-space:nowrap;
+}
+.historial-table td{padding:.85rem 1rem;white-space:nowrap;border-top:1px solid rgba(255,255,255,0.05)}
+.historial-table tbody tr{transition:background .15s}
+.historial-table tbody tr:hover{background:rgba(255,255,255,0.03)}
 .row-win td:first-child{border-left:3px solid var(--verde)}
 .row-loss td:first-child{border-left:3px solid var(--rojo)}
 .result-win{color:var(--verde);font-weight:600}
 .result-loss{color:var(--rojo);font-weight:600}
-.nota-cell{color:var(--muted);font-style:italic;font-size:.8rem;white-space:normal;min-width:160px}
+.nota-cell{color:var(--muted);font-style:italic;font-size:.8rem;white-space:normal;min-width:150px}
+
+/* ── REGLAMENTO ── */
 .reglamento-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem}
-.regla-card{background:#fff;border-radius:var(--radius);padding:1.25rem 1.5rem;box-shadow:var(--shadow);border-left:4px solid var(--acento);transition:transform .2s}
-.regla-card:hover{transform:translateX(4px)}
-.regla-num{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:rgba(5,38,57,.08);line-height:1;float:left;margin-right:.75rem}
-.regla-titulo{font-weight:600;color:var(--azul);font-size:.95rem;margin-bottom:.4rem}
-.regla-desc{font-size:.85rem;color:var(--muted);line-height:1.6;clear:both}
-footer{background:var(--azul);color:rgba(255,255,255,.35);text-align:center;padding:1.5rem;font-size:.78rem;letter-spacing:.05em}
-footer span{color:var(--dorado)}
+.regla-card{
+  background:var(--fondo2);border:1px solid rgba(255,255,255,0.06);
+  border-radius:var(--radius);padding:1.25rem 1.5rem;
+  border-left:3px solid var(--acento);
+  transition:transform .2s,border-color .2s;
+}
+.regla-card:hover{transform:translateX(4px);border-left-color:var(--dorado)}
+.regla-num{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:rgba(255,255,255,0.06);line-height:1;float:left;margin-right:.75rem}
+.regla-titulo{font-weight:600;color:#fff;font-size:.92rem;margin-bottom:.4rem}
+.regla-desc{font-size:.82rem;color:var(--muted);line-height:1.65;clear:both}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--fondo2);border-top:1px solid rgba(255,255,255,0.06);
+  text-align:center;padding:1.75rem 1.5rem;
+  font-size:.75rem;color:var(--muted2);letter-spacing:.06em;
+}
+footer em{color:var(--dorado);font-style:normal}
+
+/* ── RESPONSIVE ── */
 @media(max-width:600px){
-  .hero h1{font-size:3.2rem}
-  .stats-grid{grid-template-columns:repeat(2,1fr)}
-  .player-stats{grid-template-columns:1fr 1fr}
+  .hero{padding:3.5rem 1rem 3rem}
+  .score-sep{font-size:2rem;padding:0 .5rem}
+  .stats-row{padding:0 1rem;grid-template-columns:repeat(2,1fr)}
   .photo-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
   .perfiles-grid{grid-template-columns:1fr}
   .historial-table th:nth-child(4),.historial-table td:nth-child(4),
   .historial-table th:nth-child(5),.historial-table td:nth-child(5){display:none}
-  .tab-btn{padding:.9rem .9rem;font-size:.8rem}
-  .panel-title{font-size:1.6rem}
+  .nav-tab{padding:.9rem .75rem;font-size:.75rem}
 }
   </style>
 </head>
 <body>
 
-  <canvas id="confetti-canvas"></canvas>
+<canvas id="confetti-canvas"></canvas>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a class="nav-logo" href="#"><em>🍺</em> BEER<span>PONG</span></a>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-tab="inicio">Inicio</button>
+      <button class="nav-tab" data-tab="perdedores">😈 Noqueados</button>
+      <button class="nav-tab" data-tab="ganadores">☠️ Nos ganaron</button>
+      <button class="nav-tab" data-tab="historial">📋 Historial</button>
+      <button class="nav-tab" data-tab="jugadores">👤 Jugadores</button>
+      <button class="nav-tab" data-tab="reglamento">📜 Reglamento</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════ PANEL: INICIO ══════════ -->
+<div id="panel-inicio" class="tab-panel active">
 
   <header class="hero">
-    <span class="hero-emoji">🍺</span>
-    <h1>BEER<span>PONG</span><br>STATS</h1>
-    <p class="hero-sub">Bombón &amp; Muñpeco — La Mesa Oficial</p>
+    <span class="hero-kicker">Muñeco & Bombón's BeerPong Journal</span>
+    <h1>BEER<em>PONG</em><br>CHALLENGERS</h1>
+    <p class="hero-sub">Todos los que se han atrevido a retarnos están aquí.</p>
     <div id="racha-badge" class="racha-badge"></div>
+
+    <!-- Score principal -->
+    <div class="score-hero">
+      <div class="score-block win">
+        <span class="score-num" id="score-win">0</span>
+        <span class="score-lbl">Victorias</span>
+      </div>
+      <div class="score-sep">–</div>
+      <div class="score-block loss">
+        <span class="score-num" id="score-loss">0</span>
+        <span class="score-lbl">Derrotas</span>
+      </div>
+    </div>
+
+    <!-- Win rate bar -->
+    <div class="winrate-wrap">
+      <div class="winrate-bar-bg">
+        <div class="winrate-bar-fill" id="winrate-fill"></div>
+      </div>
+      <p class="winrate-pct" id="winrate-txt">— win rate</p>
+    </div>
   </header>
 
-  <section class="stats-section">
-    <div class="stats-grid">
-      <div class="stat-card ring-card">
-        <div class="ring-wrap">
-          <svg viewBox="0 0 80 80" width="80" height="80" xmlns="http://www.w3.org/2000/svg">
-            <circle class="ring-bg"       cx="40" cy="40" r="30" />
-            <circle class="ring-progress" cx="40" cy="40" r="30" />
-          </svg>
-          <div class="ring-text" id="stat-pct">0%</div>
-        </div>
-        <span class="stat-label">Win Rate</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-num" id="stat-total">0</span>
-        <span class="stat-label">Partidas</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-num" id="stat-ganadas">0</span>
-        <span class="stat-label">Victorias</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-num" id="stat-perdidas">0</span>
-        <span class="stat-label">Derrotas</span>
-      </div>
+  <!-- Stats secundarias -->
+  <div class="stats-row">
+    <div class="stat-pill">
+      <span class="stat-pill-num" id="stat-total">0</span>
+      <span class="stat-pill-lbl">Partidas jugadas</span>
     </div>
-    <div class="player-stats">
-      <div class="player-stat-row">
-        <div class="ps-name">Bombón</div>
-        <div class="ps-num" id="stat-bombon-tiros">0</div>
-        <div class="ps-label">tazas metidas</div>
-      </div>
-      <div class="player-stat-row">
-        <div class="ps-name">Muñpeco</div>
-        <div class="ps-num" id="stat-munpeco-tiros">0</div>
-        <div class="ps-label">tazas metidas</div>
+    <div class="stat-pill">
+      <span class="stat-pill-num" id="stat-bombon">0</span>
+      <span class="stat-pill-lbl">Tazas · Bombón</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-pill-num" id="stat-munpeco">0</span>
+      <span class="stat-pill-lbl">Tazas · Muñpeco</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-pill-num" id="stat-racha">0</span>
+      <span class="stat-pill-lbl" id="stat-racha-lbl">Racha actual</span>
+    </div>
+  </div>
+
+  <!-- CTA buttons -->
+  <div style="text-align:center;margin-top:3rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;padding:0 1.5rem">
+    <button onclick="goTab('ganadores')" style="background:var(--rojo);color:#fff;border:none;padding:.85rem 2rem;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-weight:600;font-size:.9rem;cursor:pointer;letter-spacing:.03em">☠️ Los que nos ganaron</button>
+    <button onclick="goTab('perdedores')" style="background:var(--verde);color:#fff;border:none;padding:.85rem 2rem;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-weight:600;font-size:.9rem;cursor:pointer;letter-spacing:.03em">😈 Los que noqueamos</button>
+    <button onclick="goTab('reglamento')" style="background:var(--fondo3);color:var(--dorado);border:1px solid rgba(232,185,35,0.3);padding:.85rem 2rem;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-weight:600;font-size:.9rem;cursor:pointer;letter-spacing:.03em">📜 Reglamento</button>
+  </div>
+
+  <div style="height:4rem"></div>
+</div>
+
+<!-- ══════════ PANEL: PERDEDORES ══════════ -->
+<div id="panel-perdedores" class="tab-panel">
+  <section class="section">
+    <div class="section-inner">
+      <h2 class="section-title">Los que <em>noqueamos</em> 😈</h2>
+      <p class="section-sub">Los retaron a La Mesa. No sobrevivieron.</p>
+      <div class="photo-grid" id="grid-perdedores">
+        <div class="loading-grid"><div class="spinner"></div>Cargando...</div>
       </div>
     </div>
   </section>
+</div>
 
-  <nav class="tabs-bar">
-    <div class="tabs-inner">
-      <button class="tab-btn active" data-tab="perdedores">😈 Los que noqueamos</button>
-      <button class="tab-btn"        data-tab="ganadores">☠️ Nos ganaron</button>
-      <button class="tab-btn"        data-tab="historial">📋 Historial</button>
-      <button class="tab-btn"        data-tab="perfiles">👤 Jugadores</button>
-      <button class="tab-btn"        data-tab="reglamento">📜 Reglamento</button>
-    </div>
-  </nav>
-
-  <section id="panel-perdedores" class="tab-panel active">
-    <div class="panel-inner">
-      <h2 class="panel-title">Los que <span>noqueamos</span> 😈</h2>
-      <div class="photo-grid" id="grid-perdedores"></div>
+<!-- ══════════ PANEL: GANADORES ══════════ -->
+<div id="panel-ganadores" class="tab-panel">
+  <section class="section">
+    <div class="section-inner">
+      <h2 class="section-title">Los que <em>nos ganaron</em> ☠️</h2>
+      <p class="section-sub">Pocos lo han logrado. No se les olvida.</p>
+      <div class="photo-grid" id="grid-ganadores">
+        <div class="loading-grid"><div class="spinner"></div>Cargando...</div>
+      </div>
     </div>
   </section>
+</div>
 
-  <section id="panel-ganadores" class="tab-panel">
-    <div class="panel-inner">
-      <h2 class="panel-title">Los que <span>nos ganaron</span> ☠️</h2>
-      <div class="photo-grid" id="grid-ganadores"></div>
-    </div>
-  </section>
-
-  <section id="panel-historial" class="tab-panel">
-    <div class="panel-inner">
-      <h2 class="panel-title"><span>Historial</span> completo</h2>
+<!-- ══════════ PANEL: HISTORIAL ══════════ -->
+<div id="panel-historial" class="tab-panel">
+  <section class="section">
+    <div class="section-inner">
+      <h2 class="section-title"><em>Historial</em> completo</h2>
+      <p class="section-sub">Registro cronológico de todas las batallas.</p>
       <div class="historial-wrap">
         <table class="historial-table">
           <thead>
@@ -206,157 +407,309 @@ footer span{color:var(--dorado)}
       </div>
     </div>
   </section>
+</div>
 
-  <section id="panel-perfiles" class="tab-panel">
-    <div class="panel-inner">
-      <h2 class="panel-title">Los <span>jugadores</span></h2>
+<!-- ══════════ PANEL: JUGADORES ══════════ -->
+<div id="panel-jugadores" class="tab-panel">
+  <section class="section">
+    <div class="section-inner">
+      <h2 class="section-title">Los <em>jugadores</em></h2>
+      <p class="section-sub">Bombón & Muñpeco — La Mesa Oficial.</p>
       <div class="perfiles-grid">
+
         <div class="perfil-card" id="perfil-bombon">
           <div class="perfil-header">
-            <img class="perfil-foto" src="" alt="Bombón">
-            <div class="perfil-nombre">Bombón</div>
-            <span class="perfil-alias"></span>
-            <div class="perfil-habilidad"></div>
+            <img class="perfil-bg" src="photos/jugadores/bombon.jpg" alt="" onerror="this.style.display='none'">
+            <div class="perfil-foto-wrap">
+              <img class="perfil-foto" src="photos/jugadores/bombon.jpg" alt="Bombón"
+                   onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect width=%22200%22 height=%22200%22 fill=%22%230a3d5c%22/%3E%3Ctext x=%2250%25%22 y=%2255%25%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 fill=%22%233F7CAC%22 font-size=%2264%22%3E👤%3C/text%3E%3C/svg%3E'">
+            </div>
           </div>
           <div class="perfil-body">
-            <p class="perfil-desc"></p>
-            <div class="perfil-stat-row">
-              <span class="perfil-stat-label">Tazas metidas</span>
-              <span class="perfil-stat-val perfil-tiros">—</span>
+            <div class="perfil-nombre">Bombón</div>
+            <span class="perfil-alias">El Crack</span>
+            <div class="perfil-habilidad">🎯 Sniper</div>
+            <p class="perfil-desc">Tiro preciso, mente fría. Nunca falla cuando más importa. El arma secreta de La Mesa.</p>
+            <div class="perfil-stats">
+              <div class="ps-item">
+                <span class="ps-num" id="pb-tiros">—</span>
+                <span class="ps-lbl">Tazas</span>
+              </div>
+              <div class="ps-item">
+                <span class="ps-num" id="pb-pct">—</span>
+                <span class="ps-lbl">% del equipo</span>
+              </div>
             </div>
-            <div class="perfil-stat-row">
-              <span class="perfil-stat-label">% del equipo</span>
-              <span class="perfil-stat-val perfil-pct">—</span>
+            <div class="pct-bar-wrap">
+              <div class="perfil-pct-bar" id="pb-bar" style="background:#e8b923"></div>
             </div>
-            <div class="pct-bar-wrap"><div class="perfil-pct-bar"></div></div>
           </div>
         </div>
+
         <div class="perfil-card" id="perfil-munpeco">
           <div class="perfil-header">
-            <img class="perfil-foto" src="" alt="Muñpeco">
-            <div class="perfil-nombre">Muñpeco</div>
-            <span class="perfil-alias"></span>
-            <div class="perfil-habilidad"></div>
+            <img class="perfil-bg" src="photos/jugadores/munpeco.jpg" alt="" onerror="this.style.display='none'">
+            <div class="perfil-foto-wrap">
+              <img class="perfil-foto" src="photos/jugadores/munpeco.jpg" alt="Muñpeco"
+                   onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect width=%22200%22 height=%22200%22 fill=%22%230a3d5c%22/%3E%3Ctext x=%2250%25%22 y=%2255%25%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 fill=%22%233F7CAC%22 font-size=%2264%22%3E👤%3C/text%3E%3C/svg%3E'">
+            </div>
           </div>
           <div class="perfil-body">
-            <p class="perfil-desc"></p>
-            <div class="perfil-stat-row">
-              <span class="perfil-stat-label">Tazas metidas</span>
-              <span class="perfil-stat-val perfil-tiros">—</span>
+            <div class="perfil-nombre">Muñpeco</div>
+            <span class="perfil-alias">La Leyenda</span>
+            <div class="perfil-habilidad">🔥 Clutch King</div>
+            <p class="perfil-desc">Estratega nato. Puede perder 9 tazas y ganar con la última. Bajo presión es otro nivel.</p>
+            <div class="perfil-stats">
+              <div class="ps-item">
+                <span class="ps-num" id="pm-tiros">—</span>
+                <span class="ps-lbl">Tazas</span>
+              </div>
+              <div class="ps-item">
+                <span class="ps-num" id="pm-pct">—</span>
+                <span class="ps-lbl">% del equipo</span>
+              </div>
             </div>
-            <div class="perfil-stat-row">
-              <span class="perfil-stat-label">% del equipo</span>
-              <span class="perfil-stat-val perfil-pct">—</span>
+            <div class="pct-bar-wrap">
+              <div class="perfil-pct-bar" id="pm-bar" style="background:#3F7CAC"></div>
             </div>
-            <div class="pct-bar-wrap"><div class="perfil-pct-bar"></div></div>
           </div>
         </div>
+
       </div>
     </div>
   </section>
+</div>
 
-  <section id="panel-reglamento" class="tab-panel">
-    <div class="panel-inner">
-      <h2 class="panel-title">El <span>reglamento</span> 📜</h2>
+<!-- ══════════ PANEL: REGLAMENTO ══════════ -->
+<div id="panel-reglamento" class="tab-panel">
+  <section class="section">
+    <div class="section-inner">
+      <h2 class="section-title">El <em>reglamento</em> 📜</h2>
+      <p class="section-sub">Las reglas de La Mesa. Se respetan sin excepción.</p>
       <div class="reglamento-grid">
         <div class="regla-card"><div class="regla-num">01</div><div class="regla-titulo">Formación estándar</div><div class="regla-desc">10 tazas en triángulo. Cada equipo en un extremo de la mesa. Sin excusas.</div></div>
         <div class="regla-card"><div class="regla-num">02</div><div class="regla-titulo">Tiro por turno</div><div class="regla-desc">Cada jugador lanza una vez por turno. Si ambos meten, el equipo gana 2 tazas y tienen bola de fuego.</div></div>
-        <div class="regla-card"><div class="regla-num">03</div><div class="regla-titulo">Bola de fuego</div><div class="regla-desc">Si ambos jugadores del mismo equipo anotan en el mismo turno, se tira de nuevo. Ilimitado.</div></div>
-        <div class="regla-card"><div class="regla-num">04</div><div class="regla-titulo">Bounce shot</div><div class="regla-desc">Si la bola bota en la mesa antes de entrar, cuenta como 2 tazas. El equipo rival puede bloquear.</div></div>
-        <div class="regla-card"><div class="regla-num">05</div><div class="regla-titulo">Reordenamiento</div><div class="regla-desc">Cada equipo puede pedir un reordenamiento de sus tazas una sola vez por partida.</div></div>
-        <div class="regla-card"><div class="regla-num">06</div><div class="regla-titulo">Isla</div><div class="regla-desc">Si hay una taza aislada, puedes gritar "isla" antes del tiro. Si metes, quitan 2. Si fallas, pierdes un tiro.</div></div>
-        <div class="regla-card"><div class="regla-num">07</div><div class="regla-titulo">Redemption</div><div class="regla-desc">Cuando el rival mete la última taza, el equipo perdedor tiene una ronda de redemption — un tiro cada uno.</div></div>
+        <div class="regla-card"><div class="regla-num">03</div><div class="regla-titulo">Bola de fuego</div><div class="regla-desc">Si ambos jugadores anotan en el mismo turno, se tira de nuevo. Sin límite.</div></div>
+        <div class="regla-card"><div class="regla-num">04</div><div class="regla-titulo">Bounce shot</div><div class="regla-desc">Si la bola bota antes de entrar, cuenta como 2 tazas. El rival puede bloquear.</div></div>
+        <div class="regla-card"><div class="regla-num">05</div><div class="regla-titulo">Reordenamiento</div><div class="regla-desc">Cada equipo puede pedir un reordenamiento una sola vez por partida.</div></div>
+        <div class="regla-card"><div class="regla-num">06</div><div class="regla-titulo">Isla</div><div class="regla-desc">Taza aislada: gritas "isla" antes de tirar. Si metes, quitan 2. Si fallas, pierdes un tiro.</div></div>
+        <div class="regla-card"><div class="regla-num">07</div><div class="regla-titulo">Redemption</div><div class="regla-desc">Al caer la última taza del perdedor, tienen una ronda de redemption — un tiro cada uno sin interrupción.</div></div>
         <div class="regla-card"><div class="regla-num">08</div><div class="regla-titulo">La mesa manda</div><div class="regla-desc">Cualquier disputa se resuelve por consenso. Bombón y Muñpeco tienen voto doble.</div></div>
       </div>
     </div>
   </section>
+</div>
 
-  <footer>Hecho con <span>🍺</span> por Bombón &amp; Muñpeco · La Mesa Oficial</footer>
+<footer>
+  Hecho con <em>🍺</em> por Bombón &amp; Muñpeco · La Mesa Oficial
+</footer>
 
-  <script>
-// ── DATA ──────────────────────────────────────────────────────
-const JUGADORES={bombon:{nombre:"Bombón",alias:"El Crack",foto:"photos/jugadores/bombon.jpg",descripcion:"Tiro preciso, mente fría. Nunca falla cuando más importa.",habilidad:"🎯 Sniper",color:"#e8b923"},munpeco:{nombre:"Muñpeco",alias:"La Leyenda",foto:"photos/jugadores/munpeco.jpg",descripcion:"Estratega nato. Puede perder 9 tazas y ganar con la última.",habilidad:"🔥 Clutch King",color:"#3F7CAC"}};
-const PARTIDAS=[{id:1,fecha:"2025-01-15",rival:"Los Primos",ganador:"nosotros",bombon_tiros:5,munpeco_tiros:4,foto_rival:"",nota:"Primera partida del año 💪"},{id:2,fecha:"2025-02-01",rival:"El Güero y su bro",ganador:"ellos",bombon_tiros:3,munpeco_tiros:2,foto_rival:"",nota:"Revancha pendiente"},{id:3,fecha:"2025-02-14",rival:"Las Vecinas",ganador:"nosotros",bombon_tiros:7,munpeco_tiros:3,foto_rival:"",nota:"Dominio total 😈"},{id:4,fecha:"2025-03-05",rival:"Los de Toluca",ganador:"nosotros",bombon_tiros:4,munpeco_tiros:6,foto_rival:"",nota:"Muñpeco se echó los últimos 3"},{id:5,fecha:"2025-03-20",rival:"El Güero y su bro",ganador:"nosotros",bombon_tiros:6,munpeco_tiros:4,foto_rival:"",nota:"¡REVANCHA COBRADA! 🔥"},{id:6,fecha:"2025-04-01",rival:"Team Cerveza",ganador:"ellos",bombon_tiros:2,munpeco_tiros:3,foto_rival:"",nota:"Día malo, nos pasó la factura"},{id:7,fecha:"2025-04-18",rival:"Los Doctores",ganador:"nosotros",bombon_tiros:8,munpeco_tiros:2,foto_rival:"",nota:"Bombón en modo dios 🎯"},{id:8,fecha:"2025-05-10",rival:"Los Doctores",ganador:"nosotros",bombon_tiros:5,munpeco_tiros:5,foto_rival:"",nota:"Equipo perfecto al 50/50"}];
-const PLACEHOLDER="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%23052639'/%3E%3Ctext x='50%25' y='42%25' text-anchor='middle' fill='%233F7CAC' font-size='52' font-family='sans-serif'%3E%F0%9F%8D%BA%3C/text%3E%3Ctext x='50%25' y='68%25' text-anchor='middle' fill='%23456B7A' font-size='15' font-family='sans-serif'%3ESin foto a%C3%BAn%3C/text%3E%3C/svg%3E";
-const PLACEHOLDER_PLAYER="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Crect width='300' height='300' fill='%23052639'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle' fill='%233F7CAC' font-size='80' font-family='sans-serif'%3E%F0%9F%91%A4%3C/text%3E%3C/svg%3E";
+<script>
+// ══════════════════════════════════════════════════════
+//  DATA — edita aquí las partidas
+// ══════════════════════════════════════════════════════
+const PARTIDAS = [
+  {id:1,fecha:"2025-01-15",rival:"Los Primos",ganador:"nosotros",bombon_tiros:5,munpeco_tiros:4,nota:"Primera partida del año 💪"},
+  {id:2,fecha:"2025-02-01",rival:"El Güero y su bro",ganador:"ellos",bombon_tiros:3,munpeco_tiros:2,nota:"Revancha pendiente"},
+  {id:3,fecha:"2025-02-14",rival:"Las Vecinas",ganador:"nosotros",bombon_tiros:7,munpeco_tiros:3,nota:"Dominio total 😈"},
+  {id:4,fecha:"2025-03-05",rival:"Los de Toluca",ganador:"nosotros",bombon_tiros:4,munpeco_tiros:6,nota:"Muñpeco se echó los últimos 3"},
+  {id:5,fecha:"2025-03-20",rival:"El Güero y su bro",ganador:"nosotros",bombon_tiros:6,munpeco_tiros:4,nota:"¡REVANCHA COBRADA! 🔥"},
+  {id:6,fecha:"2025-04-01",rival:"Team Cerveza",ganador:"ellos",bombon_tiros:2,munpeco_tiros:3,nota:"Día malo"},
+  {id:7,fecha:"2025-04-18",rival:"Los Doctores",ganador:"nosotros",bombon_tiros:8,munpeco_tiros:2,nota:"Bombón en modo dios 🎯"},
+  {id:8,fecha:"2025-05-10",rival:"Los Doctores",ganador:"nosotros",bombon_tiros:5,munpeco_tiros:5,nota:"Equipo perfecto al 50/50"}
+];
 
-// ── APP ───────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded',()=>{initStats();initTabs();renderGanadores();renderPerdedores();renderPerfiles();renderHistorial();checkRacha();});
-
-function initStats(){
-  const total=PARTIDAS.length,ganadas=PARTIDAS.filter(p=>p.ganador==='nosotros').length,perdidas=total-ganadas,pct=total?Math.round(ganadas/total*100):0;
-  const circle=document.querySelector('.ring-progress');
-  if(circle){const r=parseFloat(circle.getAttribute('r')),circ=2*Math.PI*r;circle.style.strokeDasharray=circ;circle.style.strokeDashoffset=circ-(circ*pct/100);}
-  animCounter('stat-total',total);animCounter('stat-ganadas',ganadas);animCounter('stat-perdidas',perdidas);animCounter('stat-pct',pct,'%');
-  const racha=calcRacha(),rachaEl=document.getElementById('racha-badge');
-  if(rachaEl&&racha.count>1){rachaEl.textContent=racha.tipo==='win'?`🔥 ${racha.count} victorias seguidas`:`💀 ${racha.count} derrotas seguidas`;rachaEl.className='racha-badge '+(racha.tipo==='win'?'racha-win':'racha-loss');rachaEl.style.display='inline-block';}
-  let bT=0,mT=0;PARTIDAS.forEach(p=>{bT+=p.bombon_tiros||0;mT+=p.munpeco_tiros||0;});
-  animCounter('stat-bombon-tiros',bT);animCounter('stat-munpeco-tiros',mT);
+// ══════════════════════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════════════════════
+function goTab(name) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + name));
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function calcRacha(){
-  const o=[...PARTIDAS].sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
-  if(!o.length)return{count:0,tipo:'win'};
-  const tipo=o[0].ganador==='nosotros'?'win':'loss';let count=0;
-  for(const p of o){const w=p.ganador==='nosotros';if((tipo==='win'&&w)||(tipo==='loss'&&!w))count++;else break;}
-  return{count,tipo};
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    goTab(tab.dataset.tab);
+    if (tab.dataset.tab === 'ganadores' && !tab.dataset.loaded) { loadFotos('ganadores'); tab.dataset.loaded = '1'; }
+    if (tab.dataset.tab === 'perdedores' && !tab.dataset.loaded) { loadFotos('perdedores'); tab.dataset.loaded = '1'; }
+  });
+});
+
+// ══════════════════════════════════════════════════════
+//  STATS
+// ══════════════════════════════════════════════════════
+function initStats() {
+  const total   = PARTIDAS.length;
+  const ganadas = PARTIDAS.filter(p => p.ganador === 'nosotros').length;
+  const perdidas= total - ganadas;
+  const pct     = total ? Math.round(ganadas / total * 100) : 0;
+
+  animCounter('score-win',   ganadas);
+  animCounter('score-loss',  perdidas);
+  animCounter('stat-total',  total);
+
+  const fill = document.getElementById('winrate-fill');
+  const txt  = document.getElementById('winrate-txt');
+  if (fill) setTimeout(() => { fill.style.width = pct + '%'; }, 200);
+  if (txt)  setTimeout(() => { txt.textContent = pct + '% win rate'; }, 400);
+
+  let bT = 0, mT = 0;
+  PARTIDAS.forEach(p => { bT += p.bombon_tiros||0; mT += p.munpeco_tiros||0; });
+  animCounter('stat-bombon', bT);
+  animCounter('stat-munpeco', mT);
+
+  const racha = calcRacha();
+  animCounter('stat-racha', racha.count);
+  const rachaLbl = document.getElementById('stat-racha-lbl');
+  if (rachaLbl) rachaLbl.textContent = racha.tipo === 'win' ? '🔥 Racha victorias' : '💀 Racha derrotas';
+
+  const badge = document.getElementById('racha-badge');
+  if (badge && racha.count > 1) {
+    badge.textContent = racha.tipo === 'win'
+      ? `🔥 ${racha.count} victorias seguidas`
+      : `💀 ${racha.count} derrotas seguidas`;
+    badge.className = 'racha-badge ' + (racha.tipo === 'win' ? 'racha-win' : 'racha-loss');
+    badge.style.display = 'inline-block';
+  }
+
+  // perfiles
+  const totalTiros = bT + mT;
+  const bPct = totalTiros ? Math.round(bT / totalTiros * 100) : 0;
+  const mPct = totalTiros ? Math.round(mT / totalTiros * 100) : 0;
+  setText('pb-tiros', bT); setText('pb-pct', bPct + '%');
+  setText('pm-tiros', mT); setText('pm-pct', mPct + '%');
+  setTimeout(() => {
+    const pb = document.getElementById('pb-bar'); if (pb) pb.style.width = bPct + '%';
+    const pm = document.getElementById('pm-bar'); if (pm) pm.style.width = mPct + '%';
+  }, 300);
+
+  if (racha.tipo === 'win' && racha.count >= 3) setTimeout(launchConfetti, 900);
 }
 
-function animCounter(id,target,suffix=''){
-  const el=document.getElementById(id);if(!el)return;
-  const dur=1200,start=performance.now();
-  const upd=(now)=>{const t=Math.min((now-start)/dur,1),e=1-Math.pow(1-t,3);el.textContent=Math.round(e*target)+suffix;if(t<1)requestAnimationFrame(upd);};
+function setText(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
+
+function calcRacha() {
+  const o = [...PARTIDAS].sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
+  if (!o.length) return {count:0, tipo:'win'};
+  const tipo = o[0].ganador === 'nosotros' ? 'win' : 'loss';
+  let count = 0;
+  for (const p of o) {
+    const w = p.ganador === 'nosotros';
+    if ((tipo==='win'&&w)||(tipo==='loss'&&!w)) count++; else break;
+  }
+  return {count, tipo};
+}
+
+function animCounter(id, target, suffix='') {
+  const el = document.getElementById(id); if (!el) return;
+  const dur = 1200, start = performance.now();
+  const upd = (now) => {
+    const t = Math.min((now-start)/dur, 1), e = 1-Math.pow(1-t,3);
+    el.textContent = Math.round(e*target) + suffix;
+    if (t<1) requestAnimationFrame(upd);
+  };
   requestAnimationFrame(upd);
 }
 
-function checkRacha(){const r=calcRacha();if(r.tipo==='win'&&r.count>=3)setTimeout(launchConfetti,800);}
+// ══════════════════════════════════════════════════════
+//  FOTOS AUTOMÁTICAS VÍA API
+// ══════════════════════════════════════════════════════
+async function loadFotos(carpeta) {
+  const gridId = 'grid-' + carpeta;
+  const container = document.getElementById(gridId);
+  if (!container) return;
 
-function launchConfetti(){
-  const canvas=document.getElementById('confetti-canvas');if(!canvas)return;
-  canvas.style.display='block';const ctx=canvas.getContext('2d');canvas.width=window.innerWidth;canvas.height=window.innerHeight;
-  const colors=['#e8b923','#3F7CAC','#F7F8FA','#698D68','#e05c3a'];
-  const pieces=Array.from({length:120},()=>({x:Math.random()*canvas.width,y:Math.random()*-canvas.height,r:Math.random()*6+4,d:Math.random()*3+1,color:colors[Math.floor(Math.random()*colors.length)],tiltAngle:0,tiltSpeed:Math.random()*.1+.05,tilt:0}));
+  container.innerHTML = '<div class="loading-grid"><div class="spinner"></div>Cargando fotos...</div>';
+
+  try {
+    const res  = await fetch('/api/fotos?carpeta=' + carpeta);
+    const data = await res.json();
+
+    if (!data.fotos || data.fotos.length === 0) {
+      container.innerHTML = `<div class="empty-grid"><span class="empty-icon">📷</span>Aún no hay fotos aquí.<br>Sube imágenes a <code>public/photos/${carpeta}/</code></div>`;
+      return;
+    }
+
+    const esGanador = carpeta === 'ganadores';
+    container.innerHTML = data.fotos.map((f, i) => `
+      <div class="photo-card" style="animation-delay:${i * 0.06}s">
+        <div class="photo-wrap">
+          <img src="${f.url}" alt="${f.nombre}" loading="lazy"
+               onerror="this.parentElement.style.background='var(--fondo3)'">
+          <div class="photo-overlay">
+            <div class="photo-name">${f.nombre}</div>
+            <span class="photo-badge ${esGanador ? 'badge-loss' : 'badge-win'}">
+              ${esGanador ? '☠️ Nos ganaron' : '✅ Los noqueamos'}
+            </span>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+  } catch(e) {
+    container.innerHTML = `<div class="empty-grid"><span class="empty-icon">⚠️</span>Error cargando fotos.<br><small>${e.message}</small></div>`;
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  HISTORIAL
+// ══════════════════════════════════════════════════════
+function renderHistorial() {
+  const tbody = document.getElementById('historial-tbody'); if (!tbody) return;
+  const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const fmt = f => { const [y,m,d]=f.split('-'); return `${parseInt(d)} ${meses[parseInt(m)-1]} ${y}`; };
+  tbody.innerHTML = [...PARTIDAS]
+    .sort((a,b) => new Date(b.fecha)-new Date(a.fecha))
+    .map(p => `
+      <tr class="${p.ganador==='nosotros'?'row-win':'row-loss'}">
+        <td>${fmt(p.fecha)}</td>
+        <td><strong>${p.rival}</strong></td>
+        <td class="${p.ganador==='nosotros'?'result-win':'result-loss'}">${p.ganador==='nosotros'?'🏆 Victoria':'💀 Derrota'}</td>
+        <td>${p.bombon_tiros??'–'}</td>
+        <td>${p.munpeco_tiros??'–'}</td>
+        <td class="nota-cell">${p.nota||''}</td>
+      </tr>`).join('');
+}
+
+// ══════════════════════════════════════════════════════
+//  CONFETTI
+// ══════════════════════════════════════════════════════
+function launchConfetti() {
+  const canvas = document.getElementById('confetti-canvas'); if (!canvas) return;
+  canvas.style.display='block';
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+  const colors=['#e8b923','#3F7CAC','#698D68','#f0f4f7','#e05c3a'];
+  const pieces=Array.from({length:130},()=>({
+    x:Math.random()*canvas.width, y:Math.random()*-canvas.height,
+    r:Math.random()*6+4, d:Math.random()*3+1,
+    color:colors[Math.floor(Math.random()*colors.length)],
+    tiltAngle:0, tiltSpeed:Math.random()*.1+.05, tilt:0
+  }));
   let frame=0;
-  function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);pieces.forEach(p=>{p.tiltAngle+=p.tiltSpeed;p.y+=p.d;p.tilt=Math.sin(p.tiltAngle)*12;if(p.y>canvas.height){p.y=-10;p.x=Math.random()*canvas.width;}ctx.beginPath();ctx.lineWidth=p.r;ctx.strokeStyle=p.color;ctx.moveTo(p.x+p.tilt+p.r/2,p.y);ctx.lineTo(p.x+p.tilt,p.y+p.tilt+p.r/2);ctx.stroke();});frame++;if(frame<180)requestAnimationFrame(draw);else{ctx.clearRect(0,0,canvas.width,canvas.height);canvas.style.display='none';}}
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{
+      p.tiltAngle+=p.tiltSpeed; p.y+=p.d; p.tilt=Math.sin(p.tiltAngle)*12;
+      if(p.y>canvas.height){p.y=-10;p.x=Math.random()*canvas.width;}
+      ctx.beginPath(); ctx.lineWidth=p.r; ctx.strokeStyle=p.color;
+      ctx.moveTo(p.x+p.tilt+p.r/2,p.y); ctx.lineTo(p.x+p.tilt,p.y+p.tilt+p.r/2); ctx.stroke();
+    });
+    frame++; if(frame<200) requestAnimationFrame(draw);
+    else{ctx.clearRect(0,0,canvas.width,canvas.height);canvas.style.display='none';}
+  }
   draw();
 }
 
-function initTabs(){
-  const tabs=document.querySelectorAll('.tab-btn'),panels=document.querySelectorAll('.tab-panel');
-  tabs.forEach(tab=>tab.addEventListener('click',()=>{tabs.forEach(t=>t.classList.remove('active'));panels.forEach(p=>p.classList.remove('active'));tab.classList.add('active');const t=document.getElementById('panel-'+tab.dataset.tab);if(t)t.classList.add('active');}));
-}
-
-function buildGallery(container,items){
-  if(!container)return;
-  if(!items.length){container.innerHTML='<p class="empty-msg">Aún no hay registros aquí. ¡A jugar! 🍺</p>';return;}
-  container.innerHTML=items.map(item=>`<div class="photo-card" style="animation-delay:${Math.random()*.4}s"><div class="photo-wrap"><img src="${item.foto||PLACEHOLDER}" alt="${item.rival}" onerror="this.src='${PLACEHOLDER}'" loading="lazy"><div class="photo-overlay"><span class="overlay-badge ${item.ganador==='nosotros'?'badge-win':'badge-loss'}">${item.ganador==='nosotros'?'✅ Los noqueamos':'☠️ Nos ganaron'}</span></div></div><div class="photo-info"><h3>${item.rival}</h3><span class="photo-date">${formatFecha(item.fecha)}</span>${item.nota?`<p class="photo-nota">${item.nota}</p>`:''}</div></div>`).join('');
-}
-
-function renderGanadores(){buildGallery(document.getElementById('grid-ganadores'),PARTIDAS.filter(p=>p.ganador==='ellos').map(p=>({...p,foto:p.foto_rival})));}
-function renderPerdedores(){buildGallery(document.getElementById('grid-perdedores'),PARTIDAS.filter(p=>p.ganador==='nosotros').map(p=>({...p,foto:p.foto_rival})));}
-
-function renderPerfiles(){
-  ['bombon','munpeco'].forEach(key=>{
-    const j=JUGADORES[key],card=document.getElementById('perfil-'+key);if(!card)return;
-    const tiros=PARTIDAS.reduce((s,p)=>s+(p[key+'_tiros']||0),0);
-    const totalTiros=PARTIDAS.reduce((s,p)=>s+(p.bombon_tiros||0)+(p.munpeco_tiros||0),0);
-    const pct=totalTiros?Math.round(tiros/totalTiros*100):0;
-    const foto=card.querySelector('.perfil-foto');foto.src=j.foto;foto.onerror=()=>foto.src=PLACEHOLDER_PLAYER;
-    card.querySelector('.perfil-alias').textContent=j.alias;
-    card.querySelector('.perfil-desc').textContent=j.descripcion;
-    card.querySelector('.perfil-habilidad').textContent=j.habilidad;
-    card.querySelector('.perfil-tiros').textContent=tiros;
-    card.querySelector('.perfil-pct').textContent=pct+'%';
-    const bar=card.querySelector('.perfil-pct-bar');bar.style.width=pct+'%';bar.style.background=j.color;
-  });
-}
-
-function renderHistorial(){
-  const tbody=document.getElementById('historial-tbody');if(!tbody)return;
-  tbody.innerHTML=[...PARTIDAS].sort((a,b)=>new Date(b.fecha)-new Date(a.fecha)).map(p=>`<tr class="${p.ganador==='nosotros'?'row-win':'row-loss'}"><td>${formatFecha(p.fecha)}</td><td><strong>${p.rival}</strong></td><td class="${p.ganador==='nosotros'?'result-win':'result-loss'}">${p.ganador==='nosotros'?'🏆 Victoria':'💀 Derrota'}</td><td>${p.bombon_tiros??'-'}</td><td>${p.munpeco_tiros??'-'}</td><td class="nota-cell">${p.nota||''}</td></tr>`).join('');
-}
-
-function formatFecha(f){if(!f)return'';const[y,m,d]=f.split('-'),meses=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return`${parseInt(d)} ${meses[parseInt(m)-1]} ${y}`;}
-  </script>
+// ══════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  initStats();
+  renderHistorial();
+  loadFotos('perdedores'); // carga la primera tab visible
+});
+</script>
 </body>
 </html>
