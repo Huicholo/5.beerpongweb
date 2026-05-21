@@ -585,15 +585,19 @@ document.querySelectorAll('.nav-tab').forEach(tab =>
 // ── STATS DESDE CONTEO DE FOTOS ──────────────────────────────
 async function initStats() {
   try {
-    const [resG, resP] = await Promise.all([
+    const [resG, resP, resCG, resCP] = await Promise.all([
       fetch('/api/fotos?carpeta=ganadores'),
-      fetch('/api/fotos?carpeta=perdedores')
+      fetch('/api/fotos?carpeta=perdedores'),
+      fetch('/api/cloudinary?carpeta=ganadores'),
+      fetch('/api/cloudinary?carpeta=perdedores')
     ]);
-    const dataG = await resG.json();
-    const dataP = await resP.json();
+    const dataG  = await resG.json();
+    const dataP  = await resP.json();
+    const dataCG = await resCG.json();
+    const dataCP = await resCP.json();
 
-    const victorias = dataP.total || 0;
-    const derrotas  = dataG.total || 0;
+    const victorias = (dataP.total || 0) + (dataCP.total || 0);
+    const derrotas  = (dataG.total || 0) + (dataCG.total || 0);
     const total     = victorias + derrotas;
     const pct       = total ? Math.round(victorias / total * 100) : 0;
 
