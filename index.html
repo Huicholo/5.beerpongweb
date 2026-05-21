@@ -196,6 +196,71 @@ footer em{color:var(--dorado);font-style:normal}
 .lightbox-caption{margin-top:1.25rem;text-align:center}
 .lightbox-caption-name{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:#fff;letter-spacing:.05em;display:block}
 .lightbox-caption-badge{display:inline-block;margin-top:.4rem;font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:.3rem .9rem;border-radius:999px}
+
+
+/* LOGIN UPLOAD */
+.upload-login{display:block}
+.upload-form-inner{display:none}
+.upload-login-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#fff;letter-spacing:.04em;margin-bottom:.25rem}
+.upload-login-sub{font-size:.8rem;color:var(--muted);margin-bottom:1.25rem}
+.upload-login-fields{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1rem}
+.upload-login-btn{width:100%;padding:1rem;background:var(--dorado);color:var(--azul);border:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-weight:700;font-size:.95rem;letter-spacing:.04em;cursor:pointer;transition:opacity .2s;text-transform:uppercase}
+.upload-login-btn:hover{opacity:.9}
+.upload-login-err{font-size:.8rem;color:var(--rojo);min-height:1.2rem;text-align:center}
+.upload-user-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;padding:.6rem .9rem;background:var(--fondo3);border-radius:var(--radius)}
+.upload-user-name{font-size:.82rem;color:var(--dorado);font-weight:600}
+.upload-logout{background:none;border:none;font-size:.72rem;color:var(--muted);cursor:pointer;text-transform:uppercase;letter-spacing:.06em;transition:color .2s}
+.upload-logout:hover{color:var(--rojo)}
+
+/* UPLOAD BUTTON FLOTANTE */
+.upload-fab{position:fixed;bottom:1.5rem;right:1.5rem;z-index:400;background:var(--dorado);color:var(--azul);border:none;width:56px;height:56px;border-radius:50%;font-size:1.4rem;cursor:pointer;box-shadow:0 4px 20px rgba(232,185,35,0.4);transition:transform .2s,box-shadow .2s;display:flex;align-items:center;justify-content:center}
+.upload-fab:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(232,185,35,0.55)}
+
+/* UPLOAD MODAL */
+.upload-overlay{position:fixed;inset:0;background:rgba(5,15,25,0.9);backdrop-filter:blur(10px);z-index:500;display:flex;align-items:flex-end;justify-content:center;padding:0;opacity:0;pointer-events:none;transition:opacity .3s}
+.upload-overlay.open{opacity:1;pointer-events:all}
+.upload-sheet{background:var(--fondo2);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:1.5rem 1.5rem 2.5rem;transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);border-top:1px solid rgba(232,185,35,0.15)}
+.upload-overlay.open .upload-sheet{transform:translateY(0)}
+.upload-handle{width:36px;height:4px;background:rgba(255,255,255,.15);border-radius:999px;margin:0 auto 1.25rem}
+.upload-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#fff;letter-spacing:.04em;margin-bottom:.25rem}
+.upload-sub{font-size:.8rem;color:var(--muted);margin-bottom:1.25rem}
+
+/* Selector ganador/perdedor */
+.upload-tipo{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.25rem}
+.tipo-btn{background:var(--fondo3);border:2px solid transparent;border-radius:var(--radius);padding:.9rem .5rem;text-align:center;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.tipo-btn .tipo-icon{font-size:1.5rem;display:block;margin-bottom:.3rem}
+.tipo-btn .tipo-label{font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.tipo-btn.selected-win{border-color:var(--verde);background:rgba(105,141,104,.12)}
+.tipo-btn.selected-win .tipo-label{color:var(--verde)}
+.tipo-btn.selected-loss{border-color:var(--rojo);background:rgba(192,57,43,.12)}
+.tipo-btn.selected-loss .tipo-label{color:var(--rojo)}
+
+/* Nombre rival */
+.upload-input{width:100%;background:var(--fondo3);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:.85rem 1rem;font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--texto);margin-bottom:1rem;outline:none;transition:border-color .2s}
+.upload-input:focus{border-color:rgba(232,185,35,.4)}
+.upload-input::placeholder{color:var(--muted2)}
+
+/* Zona de foto */
+.upload-zona{border:2px dashed rgba(255,255,255,.1);border-radius:var(--radius);padding:1.5rem;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;margin-bottom:1rem;position:relative}
+.upload-zona:hover{border-color:rgba(232,185,35,.3);background:rgba(232,185,35,.03)}
+.upload-zona input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-zona-icon{font-size:2rem;display:block;margin-bottom:.4rem}
+.upload-zona-txt{font-size:.8rem;color:var(--muted);line-height:1.5}
+.upload-preview{width:100%;max-height:180px;object-fit:cover;border-radius:var(--radius);display:none;margin-bottom:1rem}
+
+/* Botón submit */
+.upload-submit{width:100%;padding:1rem;background:var(--dorado);color:var(--azul);border:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-weight:700;font-size:.95rem;letter-spacing:.04em;cursor:pointer;transition:opacity .2s,transform .15s;text-transform:uppercase}
+.upload-submit:hover{opacity:.9;transform:translateY(-1px)}
+.upload-submit:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* Estados */
+.upload-status{text-align:center;font-size:.82rem;margin-top:.75rem;min-height:1.2rem;color:var(--muted)}
+.upload-status.ok{color:var(--verde)}
+.upload-status.err{color:var(--rojo)}
+
+/* Progress bar */
+.upload-progress{height:4px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;margin-top:.75rem;display:none}
+.upload-progress-fill{height:100%;background:var(--dorado);border-radius:999px;width:0;transition:width .3s}
   </style>
 </head>
 <body>
@@ -605,17 +670,44 @@ function animCounter(id, target) {
 }
 
 // ── FOTOS AUTOMATICAS ─────────────────────────────────────────
+const CLOUD_NAME = 'dagadwea1';
+
 async function loadFotos(carpeta, gridId, esGanador) {
   const container = document.getElementById(gridId); if (!container) return;
   container.innerHTML = '<div class="grid-loading"><div class="spinner"></div>Cargando...</div>';
   try {
-    const res  = await fetch('/api/fotos?carpeta=' + carpeta);
-    const data = await res.json();
-    if (!data.fotos || !data.fotos.length) {
-      container.innerHTML = `<div class="grid-empty">Aun no hay fotos aqui.<br><small>Sube imagenes a public/photos/${carpeta}/</small></div>`;
+    // Load from both: local public/photos + Cloudinary
+    const [resLocal, resCloud] = await Promise.allSettled([
+      fetch('/api/fotos?carpeta=' + carpeta),
+      fetch(`https://res.cloudinary.com/${CLOUD_NAME}/image/list/beerpong_${carpeta}.json`)
+    ]);
+
+    let fotos = [];
+
+    // Local photos
+    if (resLocal.status === 'fulfilled') {
+      const data = await resLocal.value.json();
+      if (data.fotos) fotos = fotos.concat(data.fotos);
+    }
+
+    // Cloudinary photos (requires a tag — we tag on upload)
+    if (resCloud.status === 'fulfilled' && resCloud.value.ok) {
+      const cData = await resCloud.value.json();
+      if (cData.resources) {
+        const cFotos = cData.resources.map(r => ({
+          url: r.secure_url,
+          nombre: r.public_id.split('/').pop().replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase())
+        }));
+        fotos = fotos.concat(cFotos);
+      }
+    }
+
+    if (!fotos.length) {
+      container.innerHTML = `<div class="grid-empty">Aun no hay fotos aqui.<br><small>Sube la primera foto con el boton +</small></div>`;
       return;
     }
-    container.innerHTML = data.fotos.map((f, i) => `
+
+    container.innerHTML = fotos.map((f, i) => `
       <div class="photo-card" style="animation-delay:${i*0.055}s"
            onclick="openLightbox('${f.url}', '${f.nombre}', ${esGanador})">
         <div class="photo-wrap">
@@ -648,6 +740,192 @@ document.addEventListener('DOMContentLoaded', () => {
   loadFotos('ganadores',  'grid-ganadores',  true);
 });
 
+
+
+// ── UPLOAD ────────────────────────────────────────────────────
+let uploadTipo = null;
+let sessionUser = null;
+let sessionPass = null;
+
+function openUpload() {
+  uploadTipo = null;
+  document.getElementById('upload-nombre').value = '';
+  document.getElementById('upload-file').value = '';
+  document.getElementById('upload-preview').style.display = 'none';
+  document.getElementById('upload-zona').style.display = 'block';
+  document.getElementById('upload-status').textContent = '';
+  document.getElementById('upload-status').className = 'upload-status';
+  document.getElementById('upload-progress').style.display = 'none';
+  document.getElementById('upload-progress-fill').style.width = '0';
+  document.getElementById('upload-submit').disabled = false;
+  document.getElementById('upload-submit').textContent = 'Subir foto';
+  document.querySelectorAll('.tipo-btn').forEach(b => b.className = 'tipo-btn');
+
+  // Show login or form depending on session
+  if (sessionUser) {
+    document.getElementById('upload-login').style.display = 'none';
+    document.getElementById('upload-form-inner').style.display = 'block';
+    document.getElementById('upload-user-name').textContent = sessionUser;
+  } else {
+    document.getElementById('upload-login').style.display = 'block';
+    document.getElementById('upload-form-inner').style.display = 'none';
+    document.getElementById('login-usuario').value = '';
+    document.getElementById('login-contrasena').value = '';
+    document.getElementById('login-err').textContent = '';
+  }
+
+  document.getElementById('upload-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+async function doLogin() {
+  const usuario    = document.getElementById('login-usuario').value.trim();
+  const contrasena = document.getElementById('login-contrasena').value;
+  const errEl      = document.getElementById('login-err');
+
+  if (!usuario || !contrasena) { errEl.textContent = 'Llena los dos campos'; return; }
+  errEl.textContent = 'Verificando...';
+
+  // Quick server check — try to get a signature with these creds
+  try {
+    const res  = await fetch('/api/upload', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ folder: 'beerpong/perdedores', usuario, contrasena })
+    });
+    const data = await res.json();
+    if (!res.ok) { errEl.textContent = data.error || 'Credenciales incorrectas'; return; }
+
+    // Login OK — save session in memory (lost on page refresh, intentional)
+    sessionUser = usuario;
+    sessionPass = contrasena;
+    errEl.textContent = '';
+    document.getElementById('upload-login').style.display = 'none';
+    document.getElementById('upload-form-inner').style.display = 'block';
+    document.getElementById('upload-user-name').textContent = usuario;
+  } catch(e) {
+    errEl.textContent = 'Error de red, intenta de nuevo';
+  }
+}
+
+function doLogout() {
+  sessionUser = null;
+  sessionPass = null;
+  closeUploadDirect();
+}
+
+function closeUploadDirect() {
+  document.getElementById('upload-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeUploadOutside(e) {
+  if (e.target === document.getElementById('upload-overlay')) closeUploadDirect();
+}
+
+function selectTipo(tipo) {
+  uploadTipo = tipo;
+  document.getElementById('tipo-perdedor').className = 'tipo-btn' + (tipo === 'perdedor' ? ' selected-win' : '');
+  document.getElementById('tipo-ganador').className  = 'tipo-btn' + (tipo === 'ganador'  ? ' selected-loss' : '');
+}
+
+function previewFoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const preview = document.getElementById('upload-preview');
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = 'block';
+  document.getElementById('upload-zona').style.display = 'none';
+}
+
+async function submitUpload() {
+  const nombre  = document.getElementById('upload-nombre').value.trim();
+  const file    = document.getElementById('upload-file').files[0];
+  const status  = document.getElementById('upload-status');
+  const btn     = document.getElementById('upload-submit');
+  const bar     = document.getElementById('upload-progress');
+  const fill    = document.getElementById('upload-progress-fill');
+
+  if (!uploadTipo) { setStatus('Elige si ganaron o perdieron', 'err'); return; }
+  if (!nombre)     { setStatus('Ponle nombre al rival', 'err'); return; }
+  if (!file)       { setStatus('Elige una foto', 'err'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Subiendo...';
+  bar.style.display = 'block';
+  setStatus('Obteniendo firma...', '');
+
+  try {
+    // 1. Get signature from our API
+    const sigRes = await fetch('/api/upload', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        folder: uploadTipo === 'ganador' ? 'beerpong/ganadores' : 'beerpong/perdedores',
+        usuario: sessionUser,
+        contrasena: sessionPass
+      })
+    });
+    const sig = await sigRes.json();
+    if (sig.error) throw new Error(sig.error);
+
+    fill.style.width = '20%';
+    setStatus('Subiendo foto...', '');
+
+    // 2. Upload to Cloudinary
+    const publicId = nombre.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('api_key', sig.apiKey);
+    fd.append('timestamp', sig.timestamp);
+    fd.append('signature', sig.signature);
+    fd.append('folder', sig.folder);
+    fd.append('public_id', publicId);
+    fd.append('tags', sig.tag);
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', `https://api.cloudinary.com/v1_1/${sig.cloudName}/image/upload`);
+
+    xhr.upload.onprogress = e => {
+      if (e.lengthComputable) fill.style.width = (20 + (e.loaded/e.total)*70) + '%';
+    };
+
+    xhr.onload = () => {
+      fill.style.width = '100%';
+      if (xhr.status === 200) {
+        const data = JSON.parse(xhr.responseText);
+        setStatus('Foto subida correctamente', 'ok');
+        btn.textContent = 'Listo';
+        // Reload the affected grid after 1s
+        setTimeout(() => {
+          const gridId = uploadTipo === 'ganador' ? 'grid-ganadores' : 'grid-noqueados';
+          loadFotos(
+            uploadTipo === 'ganador' ? 'ganadores' : 'perdedores',
+            gridId,
+            uploadTipo === 'ganador'
+          );
+          setTimeout(closeUploadDirect, 800);
+        }, 1000);
+      } else {
+        throw new Error('Error en Cloudinary: ' + xhr.status);
+      }
+    };
+
+    xhr.onerror = () => { throw new Error('Error de red'); };
+    xhr.send(fd);
+
+  } catch(e) {
+    setStatus('Error: ' + e.message, 'err');
+    btn.disabled = false;
+    btn.textContent = 'Reintentar';
+  }
+}
+
+function setStatus(msg, cls) {
+  const el = document.getElementById('upload-status');
+  el.textContent = msg;
+  el.className = 'upload-status' + (cls ? ' ' + cls : '');
+}
 
 // ── LIGHTBOX FOTOS ────────────────────────────────────────────
 function openLightbox(src, nombre, esGanador) {
@@ -688,7 +966,7 @@ const PERFILES = {
 
 Fuera de la mesa, El Bombon dedica sus tardes libres a visitar hospitales pediatricos donde anima a ninos con enfermedades cronicas. Ha donado mas de 3 millones de pesos a diversas causas beneficas, incluyendo fundaciones de acceso a agua potable en comunidades rurales y un programa propio de becas universitarias para jovenes en situacion vulnerable que el mismo fundó en 2019.
 
-Es vegano tres dias a la semana, habla cuatro idiomas y toca la flauta. Se dice que en una ocasion detuvo un robo a mano armada en una tienda de conveniencia simplemente con la mirada. Las autoridades confirmaron el incidente pero solicitaron discrecion.
+Es vegano tres dias a la semana, habla cuatro idiomas y toca la guitarra clasica. Se dice que en una ocasion detuvo un robo a mano armada en una tienda de conveniencia simplemente con la mirada. Las autoridades confirmaron el incidente pero solicitaron discrecion.
 
 Dentro del juego, su especialidad es el No-Look Shot bajo presion maxima — ha anotado el tiro decisivo en 14 partidas seguidas cuando el equipo estaba al borde de la derrota. Sus rivales lo temen. Sus companeros lo veneran. La mesa lo obedece.`,
     vasosId: 'pb-vasos',
@@ -769,6 +1047,73 @@ document.addEventListener('keydown', e => {
 
 </script>
 
+
+
+<!-- UPLOAD FAB -->
+<button class="upload-fab" onclick="openUpload()" title="Subir foto">+</button>
+
+<!-- UPLOAD MODAL -->
+<div class="upload-overlay" id="upload-overlay" onclick="closeUploadOutside(event)">
+  <div class="upload-sheet" id="upload-sheet">
+    <div class="upload-handle"></div>
+
+    <!-- LOGIN -->
+    <div class="upload-login" id="upload-login">
+      <div class="upload-login-title">Acceso</div>
+      <p class="upload-login-sub">Solo jugadores de La Mesa pueden subir fotos.</p>
+      <div class="upload-login-fields">
+        <input class="upload-input" id="login-usuario" type="text"
+               placeholder="Usuario" autocomplete="username">
+        <input class="upload-input" id="login-contrasena" type="password"
+               placeholder="Contrasena" autocomplete="current-password">
+      </div>
+      <div class="upload-login-err" id="login-err"></div>
+      <button class="upload-login-btn" onclick="doLogin()">Entrar</button>
+    </div>
+
+    <!-- FORM (visible after login) -->
+    <div class="upload-form-inner" id="upload-form-inner">
+      <div class="upload-user-bar">
+        <span class="upload-user-name" id="upload-user-name"></span>
+        <button class="upload-logout" onclick="doLogout()">Cerrar sesion</button>
+      </div>
+
+      <div class="upload-title">Subir foto</div>
+      <p class="upload-sub">Elige si ganaron o perdieron, ponle nombre y sube la foto.</p>
+
+      <div class="upload-tipo">
+        <div class="tipo-btn" id="tipo-perdedor" onclick="selectTipo('perdedor')">
+          <span class="tipo-icon">&#128520;</span>
+          <span class="tipo-label">Perdieron</span>
+        </div>
+        <div class="tipo-btn" id="tipo-ganador" onclick="selectTipo('ganador')">
+          <span class="tipo-icon">&#9760;</span>
+          <span class="tipo-label">Nos ganaron</span>
+        </div>
+      </div>
+
+      <input class="upload-input" id="upload-nombre" type="text"
+             placeholder="Nombre del rival (ej. Los Primos)" maxlength="40">
+
+      <div class="upload-zona" id="upload-zona">
+        <input type="file" id="upload-file" accept="image/*" capture="environment"
+               onchange="previewFoto(this)">
+        <span class="upload-zona-icon">&#128247;</span>
+        <div class="upload-zona-txt">Toca para tomar foto o elegir de galeria</div>
+      </div>
+
+      <img class="upload-preview" id="upload-preview" src="" alt="">
+
+      <button class="upload-submit" id="upload-submit" onclick="submitUpload()">
+        Subir foto
+      </button>
+      <div class="upload-progress" id="upload-progress">
+        <div class="upload-progress-fill" id="upload-progress-fill"></div>
+      </div>
+      <div class="upload-status" id="upload-status"></div>
+    </div>
+  </div>
+</div>
 
 <!-- LIGHTBOX FOTOS -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
