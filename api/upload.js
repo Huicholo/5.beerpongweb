@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
     });
   }
 
-  const { folder, usuario, contrasena } = body || {};
+  const { folder, publicId, usuario, contrasena } = body || {};
 
   if (!usuario || !contrasena) return res.status(401).json({ error: 'Credenciales requeridas' });
   if (USUARIOS[usuario] !== contrasena) return res.status(401).json({ error: 'Usuario o contrasena incorrectos' });
@@ -33,20 +33,13 @@ module.exports = async (req, res) => {
   const timestamp = Math.round(Date.now() / 1000);
   const apiSecret = 'X2iuGKi8dGToO9h7uhWr2iETKH0';
 
-  // Params MUST be sorted alphabetically for Cloudinary signature
-  // Only sign params that are sent to Cloudinary (NOT api_key, NOT file)
-  const params = { folder, timestamp };
+  // Sign exactly the params sent to Cloudinary, sorted alphabetically
+  const params = { folder, public_id: publicId, timestamp };
   const toSign = Object.keys(params).sort()
     .map(k => `${k}=${params[k]}`)
     .join('&') + apiSecret;
 
   const signature = crypto.createHash('sha1').update(toSign).digest('hex');
 
-  res.json({
-    timestamp,
-    signature,
-    apiKey: '228635937433993',
-    cloudName: 'dagadwea1',
-    folder
-  });
+  res.json({ timestamp, signature, apiKey: '228635937433993', cloudName: 'dagadwea1', folder });
 };

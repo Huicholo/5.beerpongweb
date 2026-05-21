@@ -856,12 +856,16 @@ async function submitUpload() {
   setStatus('Obteniendo firma...', '');
 
   try {
-    // 1. Get signature from our API
+    // 1. Build public_id first so we can include it in the signature
+    const publicId = nombre.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+
+    // 2. Get signature from our API (includes public_id)
     const sigRes = await fetch('/api/upload', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         folder: uploadTipo === 'ganador' ? 'beerpong/ganadores' : 'beerpong/perdedores',
+        publicId,
         usuario: sessionUser,
         contrasena: sessionPass
       })
@@ -872,8 +876,7 @@ async function submitUpload() {
     fill.style.width = '20%';
     setStatus('Subiendo foto...', '');
 
-    // 2. Upload to Cloudinary
-    const publicId = nombre.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    // 3. Upload to Cloudinary
     const fd = new FormData();
     fd.append('file', file);
     fd.append('api_key', sig.apiKey);
