@@ -881,7 +881,6 @@ async function submitUpload() {
     fd.append('signature', sig.signature);
     fd.append('folder', sig.folder);
     fd.append('public_id', publicId);
-    fd.append('tags', sig.tag);
 
     const xhr = new XMLHttpRequest();
     xhr.open('POST', `https://api.cloudinary.com/v1_1/${sig.cloudName}/image/upload`);
@@ -893,10 +892,8 @@ async function submitUpload() {
     xhr.onload = () => {
       fill.style.width = '100%';
       if (xhr.status === 200) {
-        const data = JSON.parse(xhr.responseText);
         setStatus('Foto subida correctamente', 'ok');
         btn.textContent = 'Listo';
-        // Reload the affected grid after 1s
         setTimeout(() => {
           const gridId = uploadTipo === 'ganador' ? 'grid-ganadores' : 'grid-noqueados';
           loadFotos(
@@ -907,11 +904,19 @@ async function submitUpload() {
           setTimeout(closeUploadDirect, 800);
         }, 1000);
       } else {
-        throw new Error('Error en Cloudinary: ' + xhr.status);
+        let msg = 'Error ' + xhr.status;
+        try { const d = JSON.parse(xhr.responseText); msg = d.error?.message || msg; } catch(e) {}
+        setStatus('Error Cloudinary: ' + msg, 'err');
+        btn.disabled = false;
+        btn.textContent = 'Reintentar';
       }
     };
 
-    xhr.onerror = () => { throw new Error('Error de red'); };
+    xhr.onerror = () => {
+      setStatus('Error de red al subir imagen', 'err');
+      btn.disabled = false;
+      btn.textContent = 'Reintentar';
+    };
     xhr.send(fd);
 
   } catch(e) {
