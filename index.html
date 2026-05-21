@@ -670,36 +670,26 @@ function animCounter(id, target) {
 }
 
 // ── FOTOS AUTOMATICAS ─────────────────────────────────────────
-const CLOUD_NAME = 'dagadwea1';
-
 async function loadFotos(carpeta, gridId, esGanador) {
   const container = document.getElementById(gridId); if (!container) return;
   container.innerHTML = '<div class="grid-loading"><div class="spinner"></div>Cargando...</div>';
   try {
-    // Load from both: local public/photos + Cloudinary
+    // Load from both sources in parallel
     const [resLocal, resCloud] = await Promise.allSettled([
       fetch('/api/fotos?carpeta=' + carpeta),
-      fetch(`https://res.cloudinary.com/${CLOUD_NAME}/image/list/beerpong_${carpeta}.json`)
+      fetch('/api/cloudinary?carpeta=' + carpeta)
     ]);
 
     let fotos = [];
 
-    // Local photos
     if (resLocal.status === 'fulfilled') {
       const data = await resLocal.value.json();
       if (data.fotos) fotos = fotos.concat(data.fotos);
     }
 
-    // Cloudinary photos (requires a tag — we tag on upload)
-    if (resCloud.status === 'fulfilled' && resCloud.value.ok) {
-      const cData = await resCloud.value.json();
-      if (cData.resources) {
-        const cFotos = cData.resources.map(r => ({
-          url: r.secure_url,
-          nombre: r.public_id.split('/').pop().replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase())
-        }));
-        fotos = fotos.concat(cFotos);
-      }
+    if (resCloud.status === 'fulfilled') {
+      const data = await resCloud.value.json();
+      if (data.fotos) fotos = fotos.concat(data.fotos);
     }
 
     if (!fotos.length) {
